@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { GiPayMoney, GiReceiveMoney } from "react-icons/gi";
 import { FaPesoSign } from "react-icons/fa6";
 import { tally } from "../dummyData";
@@ -12,6 +12,13 @@ const AllTallyTable = (props: Props) => {
   // Dummy data
   const tallyData = tally;
   const { isCreating, isDeleting, isEditing } = useCRUDContext();
+  const [editDate, setEditDate] = useState("");
+  const [editName, setEditName] = useState("");
+  const [editTransaction, setEditTransaction] = useState("");
+  const [editCategory, setEditCategory] = useState("");
+  const [editAccountFrom, setEditAccountFrom] = useState("");
+  const [editAccountTo, setEditAccountTo] = useState("");
+  const [editAmount, setEditAmount] = useState("");
 
   return (
     <div className="overflow-y-auto w-full h-full">
@@ -59,47 +66,101 @@ const AllTallyTable = (props: Props) => {
         </thead>
         <tbody>
           {tallyData.map((tally, index) => (
-            <tr key={index} className="hover">
-              {isDeleting && (
-                <th>
-                  <label className="flex justify-center items-center">
-                    {isDeleting && (
-                      <input
-                        type="checkbox"
-                        className="checkbox checkbox-accent checkbox-xs"
-                      />
-                    )}
-                  </label>
-                </th>
-              )}
-              <td className="border-r-2 border-base-300 text-sm">
-                {tally.date}
-              </td>
-              <td className="border-r-2 border-base-300 text-sm">
-                {tally.name}
-              </td>
-              <td className="border-r-2 border-base-300 text-sm">
-                {tally.transaction}
-              </td>
-              <td className="border-r-2 border-base-300 text-sm">
-                {tally.category}
-              </td>
-              <td className="border-r-2 border-base-300 text-sm">
-                {tally.accountFrom}
-              </td>
-              <td className="border-r-2 border-base-300 text-sm">
-                {tally.accountTo}
-              </td>
-              <td className="border-r-2 border-base-300 text-sm">
-                <span className="flex flex-row justify-between items-center gap-4">
-                  <FaPesoSign className="h-[12px] w-[12px]" />
-                  {tally.amount}
-                </span>
-              </td>
-            </tr>
+            <>
+              <tr
+                key={index}
+                className="hover hover:cursor-pointer"
+                onClick={() => {
+                  setEditDate(tally.date);
+                  setEditName(tally.name);
+                  setEditTransaction(tally.transaction);
+                  setEditCategory(tally.category);
+                  setEditAccountFrom(tally.accountFrom);
+                  setEditAccountTo(tally.accountTo);
+                  setEditAmount(tally.amount);
+                  document.getElementById("my_modal_1")?.showModal();
+                }}
+              >
+                {isDeleting && (
+                  <th>
+                    <label className="flex justify-center items-center">
+                      {isDeleting && (
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-accent checkbox-xs"
+                        />
+                      )}
+                    </label>
+                  </th>
+                )}
+                <td className="border-r-2 border-base-300 text-sm">
+                  {tally.date}
+                </td>
+                <td className="border-r-2 border-base-300 text-sm">
+                  {tally.name}
+                </td>
+                <td className="border-r-2 border-base-300 text-sm">
+                  {tally.transaction}
+                </td>
+                <td className="border-r-2 border-base-300 text-sm">
+                  {tally.category}
+                </td>
+                <td className="border-r-2 border-base-300 text-sm">
+                  {tally.accountFrom}
+                </td>
+                <td className="border-r-2 border-base-300 text-sm">
+                  {tally.accountTo}
+                </td>
+                <td className="border-r-2 border-base-300 text-sm">
+                  <span className="flex flex-row justify-between items-center gap-4">
+                    <FaPesoSign className="h-[12px] w-[12px]" />
+                    {tally.amount}
+                  </span>
+                </td>
+              </tr>
+            </>
           ))}
         </tbody>
       </table>
+      <dialog id="my_modal_1" className="modal">
+        <div className="modal-box ">
+          <h3 className="font-bold text-lg">Transaction Details</h3>
+          <div className="flex flex-col">
+            <span>
+              <label className="font-bold">Date: </label>
+              {editDate}
+            </span>
+            <span>
+              <label className="font-bold">Transaction Name: </label>
+              {editName}
+            </span>
+            <span>
+              <label className="font-bold">Transaction Type: </label>
+              {editTransaction}
+            </span>
+            <span>
+              <label className="font-bold">Category: </label>
+              {editCategory}
+            </span>
+            <span>
+              <label className="font-bold">Account From: </label>
+              {editAccountFrom}
+            </span>
+            <span>
+              <label className="font-bold">Account To: </label>
+              {editAccountTo}
+            </span>
+            <span>
+              <label className="font-bold">Amount: </label>
+              {editAmount}
+            </span>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+      ˝
     </div>
   );
 };
